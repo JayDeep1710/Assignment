@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ---
 ---
 
-### 3. Download data
+### 4. Download data
 
 The data is stored in google drive and can be accessed using the folllowing link
 
@@ -62,15 +62,35 @@ https://drive.google.com/drive/folders/1o_Gp-goYRbYKZpYHVQ2ERUnoXIz-ZL1o?usp=sha
 A sample layout of this repository:
 
 ```
-Personal_project/
+Project/
 │
-├── myenv/                 # Virtual environment (auto-created)
-├── requirements.txt       # Project dependencies
-├── README.md              # Setup and usage guide
-├── main.py                # Entry point (replace with your actual script)
-├── src/                   # Source code (modules, utils, etc.)
-├── data/                  # Dataset or input files (if applicable)
-└── models/                # Trained models or weights (if applicable)
+├── data/                               # Dataset folder
+│   ├── train/                          # Training images and labels
+│   ├── test/                           # Testing images and labels
+│
+├── suspicious_events/                  # Saved evidence of suspicious activities
+│   ├── suspicious_001/                 
+│   │   ├── annotated.mp4               # Model output with annotations
+│   │   └── raw.mp4                     # Original unprocessed video
+│   ├── suspicious_002/
+│   │   ├── annotated.mp4
+│   │   └── raw.mp4
+│   └── ...
+│
+├── training_logs/                      # YOLO training artifacts
+│   ├── weights/
+│   │   ├── best.pt                     # Best model checkpoint
+│   │   └── last.pt                     # Latest model checkpoint
+│   ├── other training logs...          # Training results (plots,metrics)
+│
+├── prepare_data.py                     # Extracts frames and splits into train/test sets
+├── train.py                            # Trains YOLO model on custom dataset
+├── inference.py                        # Runs inference on video inputs
+├── find_suspicious_events.py           # Detects and saves clips containing suspicious activity
+│
+├── requirements.txt                    # Python dependencies
+└── README.md                           # Project setup and usage guide
+
 ```
 
 ---
@@ -80,7 +100,7 @@ Personal_project/
 
 `prepare_data.py` is a utility script that extracts and samples frames from video files to create datasets for training machine learning models. It helps organize frames into structured `train/` and `test/` folders, making it easier to label and use for model training. 
 
-**Note :** skip this step if you already have annotated data downloaded from google drive
+**Note :** skip this step if you have already downloaded annotated data  from google drive
 ## Features
 
 * Extracts frames from videos at a specified FPS (or all frames).
@@ -107,11 +127,6 @@ You’ll be prompted to:
 
 The extracted frames will be organized as:
 
-```
-output_dir/
-├─ train/images
-└─ test/images
-```
 ```
 output_dir/
 ├─ train/
