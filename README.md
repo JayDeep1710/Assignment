@@ -1,7 +1,8 @@
 # Plexor_Assignment
-|    Raw    | Annotated |
-|---------|---------|
-| [Play](suspicious_events/suspicious_001/raw.mp4) | [Play](suspicious_events/suspicious_001/annotated.mp4) |
+
+| Raw | Annotated |
+|-----|-----------|
+| <video src="suspicious_events/suspicious_001/raw.mp4" controls width="380" style="max-width:100%;"></video> | <video src="suspicious_events/suspicious_001/annotated.mp4" controls width="380" style="max-width:100%;"></video> |
 ---
 ## Setup Instructions
 
