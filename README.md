@@ -138,3 +138,55 @@ output_dir/
 │    ├─ video1_frame_00034.jpg
 │  ├─ ...
 ```
+---
+# Training -`train.py`
+
+* Loads the dataset from `data.yaml`.
+* Instantiates an Ultralytics YOLO model (uses `yolo11s.pt` by default).
+* Trains the model with preconfigured training hyperparameters (e.g. `epochs=80`, `imgsz=640`, `batch=16`).
+* Saves training artifacts and a `results.png` plot showing loss & metric curves.
+
+### Usage
+Run the script from the command line:
+
+```bash
+python train.py
+```
+
+> Note: `train.py` uses hard-coded parameters in the script. If you want to change epochs, weights, or device, edit the script.
+
+### output (after run)
+
+Saved under `runs/detect/<name>/` (default name: `yolo11s_custom_train`):
+
+* `weights/best.pt` — best checkpoint by metric
+* `weights/last.pt` — final checkpoint
+* `results.png` — training/validation loss and metrics plot
+* training logs and run metadata
+
+---
+
+# Inference - `inference.py`
+
+* Loads a YOLO model (by default `yolo11s.pt`, but you can point to your trained checkpoint).
+* Opens a video source (file or webcam), runs detection per frame, filters detections by class (if provided), and displays annotated frames.
+* Intended to be used as a quick demo or lightweight evaluation script.
+
+### Usage
+
+if you have downloaded the data folder from google drive:
+```bash
+
+python inference.py --video data/videos/2024-07-12_17-05-13_17-13-01.mp4 --classes 1,2,3
+```
+> Note: you can change the classes you need to show but for better visiblity we are skipping class 0 (person)
+
+Local video file:
+
+```bash
+python inference.py --video path-to-video --classes 1,2,3
+```
+
+output
+
+* Live window showing annotated frames (press `q` to quit).
