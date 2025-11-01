@@ -1,0 +1,6 @@
+train: ./data/extracted_frames/train/images
+val: ./data/extracted_frames/valid/images
+test: ./data/extracted_frames/valid/images
+
+nc: 4
+names: ["Person", "Normal wrist", "wrist with product", "Suspicious"]
