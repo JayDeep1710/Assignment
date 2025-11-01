@@ -1,11 +1,50 @@
 # Plexor_Assignment
 
+## Overview
+
+This repository contains code and utilities for building, training, and running a YOLOV11-S model to detect suspicious activity (Potential Shoplifting) in video.
+
+Class Dictionary
+```python
+CLASS_NAMES = {
+    0: "Person",
+    1: "Normal wrist",
+    2: "Wrist with product",
+    3: "Suspicious"
+}
+```
+Description
+
+| Class ID | Label                  | Description                                                                                            |
+| -------- | ---------------------- | -------------------------------------------------------------------------------------------------------|
+| **0**    | **Person**             | Detects a person in the frame.                                                                         |
+| **1**    | **Normal wrist**       | Identifies a wrist without any item or product in hand.                                                |
+| **2**    | **Wrist with product** | Detects a wrist holding or interacting with a product.                                                 |
+| **3**    | **Suspicious**         | Flags potentially suspicious activity.(potential shoplifiting activity like putting product in pocket) |
+
+Main goals:
+* prepare video data (extract frames and create train/test splits),
+* train a YOLO model on the prepared dataset,
+* run inference on videos,
+* automatically detect and save short clips containing suspicious events.
+
+Key scripts:
+
+* `prepare_data.py` — frame extraction and dataset creation
+* `train.py` — YOLO training script
+* `inference.py` — run detections on video
+* `find_suspicious_events.py` — detect and save suspicious event clips
+
+---
+
 ## Setup Instructions
 
 Follow these steps to set up the project locally on your machine.
 
 ### 1. Clone the Repository
+
 Open your terminal and run:
+
 ```bash
 git clone https://github.com/yourusername/Personal_project.git
 cd Personal_project
@@ -42,19 +81,21 @@ pip install -r requirements.txt
 ```
 
 ---
----
 
 ### 4. Download data
 
-The data is stored in google drive and can be accessed using the folllowing link
+The data is stored in Google Drive and can be accessed using the following link:
 
 ```bash
 https://drive.google.com/drive/folders/1o_Gp-goYRbYKZpYHVQ2ERUnoXIz-ZL1o?usp=sharing
 ```
+### 5. Inference
 
+```bash
+python inference.py --video data/videos/2024-07-12_17-05-13_17-13-01.mp4 --classes 1,2,3
+```
+> Note: you can change the classes you need to show but for better visibility we are skipping class 0 (person)
 ---
-
-
 
 ## 🧾 Project Structure
 
@@ -89,38 +130,41 @@ Project/
 │
 ├── requirements.txt                    # Python dependencies
 └── README.md                           # Project setup and usage guide
-
 ```
 
 ---
+
 # Data Creation `prepare_data.py`
 
 ## Overview
 
-`prepare_data.py` is a utility script that extracts and samples frames from video files to create datasets for training machine learning models. It helps organize frames into structured `train/` and `test/` folders, making it easier to label and use for model training. 
+`prepare_data.py` is a utility script that extracts and samples frames from video files to create datasets for training machine learning models. It helps organize frames into structured `train/` and `test/` folders, making it easier to label and use for model training.
 
-**Note :** skip this step if you have already downloaded annotated data  from google drive
+**Note:** skip this step if you have already downloaded annotated data from Google Drive.
+
 ## Features
 
 * Extracts frames from videos at a specified FPS (or all frames).
 * Automatically splits frames into train and test sets.
 * Displays frame count and FPS for each input video.
-* Simple command-line interface for for sampling rate and test ratio.
+* Simple command-line interface for sampling rate and test ratio.
 
 ## Usage
 
 Run the script from the command line:
+
 ```bash
-python prepare_date.py data/videos data/videos/extracted_frames
+python prepare_data.py data/videos data/videos/extracted_frames
 ```
+
 To run on other video source use:
+
 ```bash
 python prepare_data.py /path/to/videos /path/to/output_dir
 ```
 
-
-
 You’ll be prompted to:
+
 1. Enter the sampling FPS (e.g., `2.0`).
 2. Enter the test split ratio (e.g., `0.2`).
 
@@ -137,8 +181,15 @@ output_dir/
 │    ├─ video1_frame_00034.jpg
 │  ├─ ...
 ```
+![results2](training_logs/data_preparation.png)
 ---
-# Training -`train.py`
+# Data Labeling
+Tool used: Labelimg
+![results3](/Users/jaydeep/Desktop/Plexor_Assignment/training_logs/labels.jpg)
+
+---
+
+# Training - `train.py`
 
 * Loads the dataset from `data.yaml`.
 * Instantiates an Ultralytics YOLO model (uses `yolo11s.pt` by default).
@@ -146,6 +197,7 @@ output_dir/
 * Saves training artifacts and a `results.png` plot showing loss & metric curves.
 
 ### Usage
+
 Run the script from the command line:
 
 ```bash
@@ -154,7 +206,7 @@ python train.py
 
 > Note: `train.py` uses hard-coded parameters in the script. If you want to change epochs, weights, or device, edit the script.
 
-### output (after run)
+### Output (after run)
 
 Saved under `runs/detect/<name>/` (default name: `yolo11s_custom_train`):
 
@@ -162,8 +214,11 @@ Saved under `runs/detect/<name>/` (default name: `yolo11s_custom_train`):
 * `weights/last.pt` — final checkpoint
 * `results.png` — training/validation loss and metrics plot
 * training logs and run metadata
+
 ### Training Results:
+
 ![results](training_logs/results.png)
+
 ---
 
 # Inference - `inference.py`
@@ -174,12 +229,13 @@ Saved under `runs/detect/<name>/` (default name: `yolo11s_custom_train`):
 
 ### Usage
 
-if you have downloaded the data folder from google drive:
-```bash
+If you have downloaded the `data` folder from Google Drive:
 
+```bash
 python inference.py --video data/videos/2024-07-12_17-05-13_17-13-01.mp4 --classes 1,2,3
 ```
-> Note: you can change the classes you need to show but for better visiblity we are skipping class 0 (person)
+
+> Note: you can change the classes you need to show but for better visibility we are skipping class 0 (person)
 
 Local video file:
 
@@ -187,11 +243,11 @@ Local video file:
 python inference.py --video path-to-video --classes 1,2,3
 ```
 
-output
+**Output**
 
 * Live window showing annotated frames (press `q` to quit).
 
-## 🎥 Suspicious Event Detection
+##Suspicious Event Detection - `find_suspicious_events.py`
 
 ### Overview
 
@@ -209,16 +265,17 @@ Each detected event is stored in a unique folder under `suspicious_events/`.
 * Reads video frames via **OpenCV**.
 * Keeps a rolling buffer of the previous few seconds (`pre_sec`) and the following few seconds (`post_sec`).
 * When a “Suspicious” class is detected, it saves:
-   * the buffered pre-event frames,
-   * the detection moment, and
-   * the post-event frames. 
-*. Clips are saved as compressed MP4 files for efficient storage.
+
+  * the buffered pre-event frames,
+  * the detection moment, and
+  * the post-event frames.
+* Clips are saved as compressed MP4 files for efficient storage.
 
 ---
 
 ## Usage
 
-Then run the script from your terminal:
+Run the script from your terminal:
 
 ```bash
 python find_suspicious_events.py <video_path> <model_path>
@@ -227,9 +284,8 @@ python find_suspicious_events.py <video_path> <model_path>
 **Example:**
 
 ```bash
-python find_suspicious_events.py data/videos/test_video.mp4 training_logs/weights/best.pt
+python find_suspicious_events.py data/videos/2024-07-12_17-05-13_17-13-01.mp4 training_logs/weights/best.pt
 ```
-
 
 ---
 
@@ -249,3 +305,5 @@ suspicious_events/
 ```
 
 Each folder represents one detected suspicious event, containing both the **annotated** and **raw** video clips.
+
+
