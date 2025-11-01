@@ -16,7 +16,7 @@ def main():
     allowed_classes = str_to_class_list(args.classes)
 
     video_source = int(args.video) if args.video.isdigit() else args.video
-    model = YOLO("best.pt")
+    model = YOLO("training_logs/weights/best.pt")
 
     cap = cv2.VideoCapture(video_source)
 
