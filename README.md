@@ -163,7 +163,8 @@ Saved under `runs/detect/<name>/` (default name: `yolo11s_custom_train`):
 * `weights/last.pt` — final checkpoint
 * `results.png` — training/validation loss and metrics plot
 * training logs and run metadata
-
+### Training Results:
+![results](training_logs/results.png)
 ---
 
 # Inference - `inference.py`
