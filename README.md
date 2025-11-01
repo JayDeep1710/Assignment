@@ -185,7 +185,7 @@ output_dir/
 ---
 # Data Labeling
 Tool used: Labelimg
-![results3](/Users/jaydeep/Desktop/Plexor_Assignment/training_logs/labels.jpg)
+![results3](training_logs/labels.jpg)
 
 ---
 
