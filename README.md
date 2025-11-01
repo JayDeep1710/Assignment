@@ -186,6 +186,11 @@ output_dir/
 # Data Labeling
 Tool used: Labelimg
 ![results3](training_logs/labels.jpg)
+> Note: 
+From the dataset visualization, it’s evident that there is a noticeable class imbalance — with classes like *Person* and *Normal wrist* having significantly more samples compared to *wrist with product* and *Suspicious*.  
+To address this, specific training parameters and augmentations were chosen to improve the model’s ability to learn from underrepresented classes.  
+Details on how each parameter contributes to mitigating class imbalance can be found in the **Training** section below.
+
 
 ---
 
@@ -195,6 +200,20 @@ Tool used: Labelimg
 * Instantiates an Ultralytics YOLO model (uses `yolo11s.pt` by default).
 * Trains the model with preconfigured training hyperparameters (e.g. `epochs=80`, `imgsz=640`, `batch=16`).
 * Saves training artifacts and a `results.png` plot showing loss & metric curves.
+
+### Training Parameters
+| **Parameter** | **Value** |  **Use**  |
+|----------------|------------|--------------------------------------|
+| `epochs` | 80 | Allows the model to train longer, giving minority classes more chances to be learned effectively. |
+| `imgsz` | 640 | Preserves fine details of smaller or less frequent objects, improving recognition of minority classes. |
+| `batch` | 16 | Balances gradient updates per iteration, preventing majority classes from dominating during training. |
+| `fliplr` | 0.5 | Augments data by horizontally flipping images 50% of the time, effectively doubling samples for rare classes. |
+| `flipud` | 0.0 | Avoids unrealistic vertical flips, maintaining meaningful data for orientation-sensitive classes. |
+| `degrees` | 5 | Adds small rotational variations to expand diversity for minority classes without distorting objects. |
+| `shear` | 10 | Introduces geometric diversity, helping the model generalize better for underrepresented class shapes. |
+| `patience` | 50 | Prevents overfitting to frequent classes by stopping training when validation performance plateaus. |
+| `device` | "" (auto) | Ensures optimal hardware utilization, allowing longer and more consistent training cycles that benefit all classes. |
+
 
 ### Usage
 
