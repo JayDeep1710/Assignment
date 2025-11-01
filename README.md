@@ -1,8 +1,5 @@
 # Plexor_Assignment
-|    Raw    | Annotated |
-|---------|---------|
-| [Play](suspicious_events/suspicious_001/raw.mp4) | [Play](suspicious_events/suspicious_001/annotated.mp4) |
----
+
 ## Setup Instructions
 
 Follow these steps to set up the project locally on your machine.
@@ -193,3 +190,62 @@ python inference.py --video path-to-video --classes 1,2,3
 output
 
 * Live window showing annotated frames (press `q` to quit).
+
+## 🎥 Suspicious Event Detection
+
+### Overview
+
+`find_suspicious_events.py` processes input videos using a trained YOLO model to automatically **detect and save clips containing suspicious activity**.
+The script continuously analyzes video frames, keeps a short pre-event buffer, and when a “Suspicious” object is detected, it saves two short videos:
+
+* `annotated.mp4` – video with bounding boxes and class labels
+* `raw.mp4` – original unannotated footage
+
+Each detected event is stored in a unique folder under `suspicious_events/`.
+
+---
+
+* Loads a YOLO model (e.g., `best.pt`) using the **Ultralytics** framework.
+* Reads video frames via **OpenCV**.
+* Keeps a rolling buffer of the previous few seconds (`pre_sec`) and the following few seconds (`post_sec`).
+* When a “Suspicious” class is detected, it saves:
+   * the buffered pre-event frames,
+   * the detection moment, and
+   * the post-event frames. 
+*. Clips are saved as compressed MP4 files for efficient storage.
+
+---
+
+## Usage
+
+Then run the script from your terminal:
+
+```bash
+python find_suspicious_events.py <video_path> <model_path>
+```
+
+**Example:**
+
+```bash
+python find_suspicious_events.py data/videos/test_video.mp4 training_logs/weights/best.pt
+```
+
+
+---
+
+### Output
+
+After running, the following folder structure is generated:
+
+```
+suspicious_events/
+├── suspicious_001/
+│   ├── annotated.mp4
+│   └── raw.mp4
+├── suspicious_002/
+│   ├── annotated.mp4
+│   └── raw.mp4
+...
+```
+
+Each folder represents one detected suspicious event, containing both the **annotated** and **raw** video clips.
