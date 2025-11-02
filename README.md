@@ -1,4 +1,4 @@
-# Plexor_Assignment
+# Junior AI Engineer Assignment
 
 ## Overview
 
