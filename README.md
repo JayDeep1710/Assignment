@@ -46,8 +46,7 @@ Follow these steps to set up the project locally on your machine.
 Open your terminal and run:
 
 ```bash
-git clone https://github.com/yourusername/Personal_project.git
-cd Personal_project
+https://github.com/JayDeep1710/Assignment.git
 ```
 
 ---
